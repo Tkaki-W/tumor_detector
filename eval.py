@@ -4,6 +4,11 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
+# --- 設定項目 ---
+# カメラの光軸（正面）と重力方向（鉛直下向き）のなす角度（度数法）
+# カメラが真下を向いているなら 0、水平を向いているなら 90、斜め下45度なら 45
+CAMERA_ANGLE_DEG = 49.0
+
 # Yoloのrunsの中のptファイルを呼び出す
 model = YOLO(r"C:\Users\mswas\Desktop\オクターブン卒論\Yolo操作\runs\detect\train-8\weights\best.pt")
 
@@ -21,6 +26,8 @@ profile = pipeline.start(config)
 intrinsics = profile.get_stream(rs.stream.color).as_video_stream_profile().get_intrinsics()
 fx = intrinsics.fx
 fy = intrinsics.fy
+cam_cx = intrinsics.width // 2
+cam_cy = intrinsics.height // 2
 
 # 深度フレームをカラーフレームに合わせる
 align_to = rs.stream.color
@@ -90,23 +97,43 @@ try:
                 else:
                     radius_mm = 0
                 
+                # 写真中央（カメラ光軸）からのX方向、Y方向のズレ (実寸 mm)
+                # pt_center (X_c, Y_c, Z_c) の X_c, Y_c は光軸からのメートル単位の距離
+                dx_mm = pt_center[0] * 1000
+                dy_mm = pt_center[1] * 1000
+
+                # 鉛直方向の距離（高さ/深さ）の計算
+                theta_rad = np.radians(CAMERA_ANGLE_DEG)
+                # pt_center[1] はカメラ座標系のY(下方向)、pt_center[2] はカメラ座標系のZ(前方向)
+                vertical_dist = pt_center[1] * np.sin(theta_rad) + pt_center[2] * np.cos(theta_rad)
+
                 # ラベル作成
                 cls = int(box.cls[0])
                 cls_name = model.names[cls]
                 conf = float(box.conf[0])
                 line1 = f"{cls_name} ({conf:.2f})"
-                line2 = f"R: {radius_mm:.1f}mm CD: {dist_center:.2f}m"
+                line2 = f"R: {radius_mm:.1f}mm Depth: {dist_center:.2f}m"
+                line3 = f"dx: {dx_mm:.1f}mm dy: {dy_mm:.1f}mm"
+                line4 = f"Z(vert): {vertical_dist:.2f}m"
                 
                 # 描画
                 color = (0, 255, 0)
                 cv2.rectangle(color_image, (x1, y1), (x2, y2), color, 2)
-                cv2.putText(color_image, line1, (x1, y1 - 25), 
+                cv2.putText(color_image, line1, (x1, y1 - 59), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-                cv2.putText(color_image, line2, (x1, y1 - 8), 
+                cv2.putText(color_image, line2, (x1, y1 - 42), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                cv2.putText(color_image, line3, (x1, y1 - 25), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                cv2.putText(color_image, line4, (x1, y1 - 8), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
                 
                 # 中心点の可視化
                 cv2.circle(color_image, (cx, cy), 4, (255, 0, 0), -1)
+
+        # 画面中央（原点）にレティクル（赤い十字）を描画
+        cv2.line(color_image, (cam_cx - 15, cam_cy), (cam_cx + 15, cam_cy), (0, 0, 255), 2)
+        cv2.line(color_image, (cam_cx, cam_cy - 15), (cam_cx, cam_cy + 15), (0, 0, 255), 2)
 
         cv2.imshow(window_name, color_image)
         if cv2.waitKey(1) == ord('q'):
