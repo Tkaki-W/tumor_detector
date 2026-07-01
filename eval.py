@@ -5,7 +5,7 @@ import numpy as np
 from ultralytics import YOLO
 
 # --- 設定項目 ---
-# カメラの光軸（正面）と重力方向（鉛直下向き）のなす角度（度数法）
+# カメラの光軸（正面）と重力方向（鉛直下向き）のなす角度（度数法）逐一やってね
 # カメラが真下を向いているなら 0、水平を向いているなら 90、斜め下45度なら 45
 CAMERA_ANGLE_DEG = 49.0
 
@@ -33,7 +33,7 @@ cam_cy = intrinsics.height // 2
 align_to = rs.stream.color
 align = rs.align(align_to)
 
-# ウィンドウの設定：WINDOW_NORMALにすることで、マウスで拡大・縮小が可能になります
+# ウィンドウの設定：WINDOW_NORMALにすることで、拡大縮小可能に
 window_name = "Tumor Detection (Resizable)"
 cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
@@ -42,16 +42,19 @@ print("腫瘍半径検知モード: 開始 ('q'キーで終了)")
 try:
     while True:
         frames = pipeline.wait_for_frames()
+        #カラーと深度を別々に取り出す
         aligned_frames = align.process(frames)
         color_frame = aligned_frames.get_color_frame()
         depth_frame = aligned_frames.get_depth_frame()
         
         if not color_frame or not depth_frame:
             continue
-
+        
         color_image = np.asanyarray(color_frame.get_data())
+        #機械学習モデルにかける！
         results = model(color_image, verbose=False)
         
+        #検出分の数だけ繰り返す
         for result in results:
             for box in result.boxes:
                 # 枠の座標 (x1, y1, x2, y2)
@@ -93,7 +96,7 @@ try:
                 if dist_center > 0:
                     # ピクセルから実寸(mm)への変換公式: (px * 距離) / fx
                     # YOLOの枠が少し内側を通るため、1.15倍の補正をかけて調整
-                    radius_mm = (radius_px * dist_center * 1000 / fx) * 1.15
+                    radius_mm = (radius_px * dist_center * 1000 / fx) * 1.4
                 else:
                     radius_mm = 0
                 
@@ -110,6 +113,8 @@ try:
                 # ラベル作成
                 cls = int(box.cls[0])
                 cls_name = model.names[cls]
+                if cls_name == "ファントム":
+                    cls_name = "Phantom"
                 conf = float(box.conf[0])
                 line1 = f"{cls_name} ({conf:.2f})"
                 line2 = f"R: {radius_mm:.1f}mm Depth: {dist_center:.2f}m"
@@ -121,8 +126,10 @@ try:
                 cv2.rectangle(color_image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(color_image, line1, (x1, y1 - 59), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                """
                 cv2.putText(color_image, line2, (x1, y1 - 42), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                """
                 cv2.putText(color_image, line3, (x1, y1 - 25), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
                 cv2.putText(color_image, line4, (x1, y1 - 8), 
