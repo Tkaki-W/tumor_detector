@@ -7,7 +7,9 @@
 
 <!-- 実際の計測画面（Phantom / dx, dy / Z(vert) が表示されている画像）を docs/demo.png に置いてください -->
 <p align="center">
-  <img src="docs/demo.png" width="600" alt="計測画面">
+  <img width="196" height="181" alt="image" src="https://github.com/user-attachments/assets/12b432f6-b8fe-48a9-b771-1eecd445ecea" />
+<img width="196" height="181" alt="スクリーンショット 2026-10-03 115924" src="https://github.com/user-attachments/assets/0e04b21c-14fe-41f3-940a-268b3b386389" />
+
 </p>
 
 ---
@@ -23,17 +25,7 @@ flowchart LR
     E --> F["eval.py<br>検出 + Z 測距"]
 ```
 
-`eval.py` の 1 フレームあたりの処理：
 
-```mermaid
-flowchart TD
-    A["RealSense からカラー / 深度を取得"] --> B["深度をカラーに位置合わせ<br>rs.align"]
-    B --> C["YOLO で検出 → bbox 中心 (cx, cy)"]
-    C --> D["中心周辺 5×5 の平均深度"]
-    D --> E["カメラ座標に変換<br>深さ D・中心からのズレ dy"]
-    E --> F["Z = D·cosθ + dy·sinθ"]
-    F --> G["画面に描画"]
-```
 
 ---
 
@@ -68,7 +60,8 @@ model.train(data='dataset.yaml', epochs=100, imgsz=640)
 
 <!-- スライドの測距図（θ, D, dy の関係）を docs/ranging.png に置いてください -->
 <p align="center">
-  <img src="docs/ranging.png" width="500" alt="測距の幾何">
+  <img width="629" height="521" alt="image" src="https://github.com/user-attachments/assets/c5356e33-1d4c-4334-a8a0-e1a73c4d3817" />
+
 </p>
 
 | 記号 | 意味 |
