@@ -8,7 +8,8 @@
 <!-- 実際の計測画面（Phantom / dx, dy / Z(vert) が表示されている画像）を docs/demo.png に置いてください -->
 <p align="center">
 <img width="200" alt="画像1" src="https://github.com/user-attachments/assets/149e3d77-2d8d-412a-9b50-9912cce00f82" />
-
+</p>
+<p align ="center>
 <img width="200" alt="スクリーンショット 2026-10-03 115924" src="https://github.com/user-attachments/assets/0e04b21c-14fe-41f3-940a-268b3b386389" />
 
 </p>
