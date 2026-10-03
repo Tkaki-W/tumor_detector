@@ -9,9 +9,9 @@
 <p align="center">
 <img width="200" alt="画像1" src="https://github.com/user-attachments/assets/149e3d77-2d8d-412a-9b50-9912cce00f82" />
 </p>
-<p align ="center>
-<img width="200" alt="スクリーンショット 2026-10-03 115924" src="https://github.com/user-attachments/assets/0e04b21c-14fe-41f3-940a-268b3b386389" />
 
+<p align ="center">
+<img width="200" alt="スクリーンショット 2026-10-03 115924" src="https://github.com/user-attachments/assets/0e04b21c-14fe-41f3-940a-268b3b386389" />
 </p>
 
 ---
@@ -62,7 +62,7 @@ model.train(data='dataset.yaml', epochs=100, imgsz=640)
 
 <!-- スライドの測距図（θ, D, dy の関係）を docs/ranging.png に置いてください -->
 <p align="center">
-  <img width="200" alt="image" src="https://github.com/user-attachments/assets/c5356e33-1d4c-4334-a8a0-e1a73c4d3817" />
+  <img width="400" alt="image" src="https://github.com/user-attachments/assets/c5356e33-1d4c-4334-a8a0-e1a73c4d3817" />
 
 </p>
 
