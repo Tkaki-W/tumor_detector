@@ -7,7 +7,7 @@ from ultralytics import YOLO
 # --- 設定項目 ---
 # カメラの光軸（正面）と重力方向（鉛直下向き）のなす角度（度数法）逐一やってね
 # カメラが真下を向いているなら 0、水平を向いているなら 90、斜め下45度なら 45
-CAMERA_ANGLE_DEG = 49.0
+CAMERA_ANGLE_DEG = 44.0
 
 # Yoloのrunsの中のptファイルを呼び出す
 model = YOLO(r"C:\Users\mswas\Desktop\オクターブン卒論\Yolo操作\runs\detect\train-8\weights\best.pt")
@@ -119,7 +119,7 @@ try:
                 line1 = f"{cls_name} ({conf:.2f})"
                 line2 = f"R: {radius_mm:.1f}mm Depth: {dist_center:.2f}m"
                 line3 = f"dx: {dx_mm:.1f}mm dy: {dy_mm:.1f}mm"
-                line4 = f"Z(vert): {vertical_dist:.2f}m"
+                line4 = f"Z(vert): {vertical_dist:.3f}m"
                 
                 # 描画
                 color = (0, 255, 0)
