@@ -34,9 +34,14 @@ while True:
     key = cv2.waitKey(1)
     if key == ord('s'):
         path = f"{save_dir}/img_{i:04d}.jpg"
-        cv2.imwrite(path, color)
-        print(f"保存: {path}")
-        i += 1
+        # cv2.imwriteは日本語を含むパスに保存できないので、エンコードしてから書き込む
+        ok, buf = cv2.imencode(".jpg", color)
+        if ok:
+            buf.tofile(path)
+            print(f"保存: {path}")
+            i += 1
+        else:
+            print(f"保存失敗: {path}")
     elif key == ord('q'):
         break
 
