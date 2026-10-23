@@ -1,6 +1,0 @@
-path: C:\Users\mswas\Desktop\オクターブン卒論\Yolo操作\dataset
-train: images/train
-val: images/val
-
-nc: 1
-names: ['ファントム']

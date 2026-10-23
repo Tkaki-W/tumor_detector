@@ -1,0 +1,6 @@
+# パスはこのファイルがあるフォルダからの相対パス
+train: dataset/images/train
+val: dataset/images/val
+
+nc: 1
+names: ['ファントム']
